@@ -57,7 +57,9 @@ Step-by-Step Instructions
 - Click Sign In to the Console
 - Use your root or IAM user credentials
 
-![AWS LOGIN](/images/launch an instance.png)
+LAMP STACK IMPLEMENTATION IN AWS/
+
+![Tux, the Linux mascot](LAMP STACK IMPLEMENTATION IN AWS/IMAGES/aws login.PNG)
 
 2. Open the EC2 Dashboard
 - In the Services menu, search for and click EC2
