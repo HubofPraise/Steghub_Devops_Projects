@@ -57,7 +57,7 @@ Step-by-Step Instructions
 - Click Sign In to the Console
 - Use your root or IAM user credentials
 
-![AWS LOGIN](/images/)
+![AWS LOGIN](/images/launch an instance.png)
 
 2. Open the EC2 Dashboard
 - In the Services menu, search for and click EC2
