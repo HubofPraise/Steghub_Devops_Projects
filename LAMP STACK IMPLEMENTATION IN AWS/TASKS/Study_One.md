@@ -57,6 +57,7 @@ Step-by-Step Instructions
 - Click Sign In to the Console
 - Use your root or IAM user credentials
 
+![How to Lunch an Instance](./IMAGES/aws_login.PNG)
 
 
 2. Open the EC2 Dashboard
