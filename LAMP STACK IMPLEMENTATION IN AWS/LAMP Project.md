@@ -57,20 +57,37 @@ Step-by-Step Instructions
 - Click Sign In to the Console
 - Use your root or IAM user credentials
 
-![How to Lunch an Instance](./IMAGES/aws_login.PNG)
+
+<p float="left">
+  <img src="./Images/aws_login.PNG" width="300" />
+  <img src="./Images/console_home.PNG" width="500" />
+</p>
+
 
 
 2. Open the EC2 Dashboard
 - In the Services menu, search for and click EC2
 - Click Launch Instance
 
+<p float="left">
+  <img src="./Images/ec2_dashboard.PNG" width="400" />
+  <img src="./Images/ec2_dashboard_launch.PNG" width="400" />
+</p>
+
+
 3. Configure Instance Basics
 - Name your instance: e.g., lamp-server
 - Amazon Machine Image (AMI):
-- Choose Amazon Linux 2 or Ubuntu Server 22.04 LTS
+- Choose  Ubuntu Server 22.04 LTS
 
 Instance type:
--Select t2.micro (Free Tier eligible)
+-Select t3.micro (Free Tier eligible)
+
+<p float="center">
+  <img src="./Images/launch_an_instance.PNG" width="400" />
+  <img src="./Images/instance_type.PNG" width="400" />
+</p>
+
 
 4. Create or Choose a Key Pair
 - Under Key pair (login):
@@ -78,25 +95,41 @@ Instance type:
 
 If creating new:
 
-- Name it (e.g., lamp-key)
+- Name it (e.g., lamp-project)
 - Choose .pem format (for Linux/macOS) or .ppk (for Windows PuTTY users)
 
-> Download and save it securely – you’ll need it to connect
+![Image](./Images/createkeypair.PNG)
+
+   **Download and save it securely – you’ll need it to connect**
+
+
 
 5. Configure Network Settings
 - VPC and Subnet: Leave as default (unless you’ve set up custom VPC)
 
-Firewall (Security group):
+   Firewall (Security group):
 - Create a new security group with these inbound rules:
 - SSH – TCP – port 22 – from My IP
 - HTTP – TCP – port 80 – Anywhere (0.0.0.0/0)
 - HTTPS – TCP – port 443 – Anywhere (optional)
 
+<p float="center">
+  <img src="./Images/instance_type.PNG" width="400" />
+  <img src="./Images/firewall.PNG" width="400" />
+<img src="./Images/configurestorage.PNG" width="400" />
+</p>
+
+
+
 6. Storage Configuration
 - Keep the default 8 GB (you can increase it if needed)
 
+![Image](./Images/configurestorage.PNG)
+
 7. Review and Launch
 - Double-check all configurations
+
+![Image](./Images/aws_login.PNG)
 
 Click Launch Instance
 
