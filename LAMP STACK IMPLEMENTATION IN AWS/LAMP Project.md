@@ -139,3 +139,204 @@ Click Launch Instance
 - Go to the Instances section
 - Select your instance → click Connect
 - Choose the SSH tab → follow the instructions provided using your downloaded .pem key
+
+## INSTALLING APACHE AND UPDATING FIREWALL ##
+### OVERVIEW ###
+
+Apache HTTP Server (often called Apache) is one of the most widely used open-source web servers in the world. It is designed to serve web pages, process HTTP requests, and run websites or applications. Apache is known for its flexibility, stability, and support for multiple operating systems.
+
+### Tasks Performed by Apache ###
+ - Serve Web Content: Delivers web pages, images, and files to clients’ browsers.
+ - Process Dynamic Requests: Works with languages like PHP, Python, or Perl to generate content on demand.
+ - Manage Connections: Handles multiple simultaneous requests efficiently.
+ - URL Redirection & Rewriting: Redirects users or modifies request URLs.
+ - Authentication & Authorization: Controls access to resources.
+ - Logging & Monitoring: Records access logs and error logs.
+ - Load Balancing: Distributes traffic to multiple backend servers.
+ - SSL/TLS Encryption: Secures communication between server and client.
+
+### Install Apache using Ubuntu’s package manager 'apt': ###
+
+```powershell
+# update a list of packages in package manager
+$ sudo apt update
+# run apache2 package installation
+$ sudo apt install apache2
+```
+
+To verify that apache2 is running as a Service in OS
+
+```powershell
+# You can start, stop, and check the status of the Apache2 server with one of these commands:
+$ sudo systemctl stop apache2
+$ sudo systemctl start apache2
+$ sudo systemctl status apache2
+```
+If it is green and running, then you did everything correctly - you have just launched your first Web Server in the Clouds!
+Before we can receive any traffic by our Web Server, we need to open TCP port 80 which is the default port that web browsers use to access web pages on the Internet
+As we know, we have TCP port 22 open by default on our EC2 machine to access it via SSH, so we need to add a rule to EC2 configuration to open inbound connection through port 80:
+
+Test Apache in a Browser
+ - Copy your EC2 Public IP from the AWS console.
+ - Paste it in a browser:
+
+```powershell
+http://<Public-IP-Address>:80)
+```
+You should see the Apache default test page.
+
+## INSTALLING MYSQL ##
+### OVERVIEW ###
+MySQL is a relational database used to store and query application data. On Ubuntu/Debian, you can install MySQL Server directly. On Amazon Linux, the default is MariaDB (a drop-in replacement for MySQL). Both work with common LAMP stacks.
+
+Again, use 'apt' to acquire and install this software:
+
+```powershell
+$ sudo apt install mysql-server
+```
+When the installation is finished, log in to the MySQL console by typing:
+
+```powershell
+$ sudo mysql
+```
+It’s recommended that you run a security script that comes pre-installed with MySQL. This script will remove some insecure default settings and lock down access to your database system. Before running the script you will set a password for the root user, using mysql_native_password as default authentication method. We’re defining this user’s password as PassWord.1.
+
+```powershell
+ALTERUSER'root'@'localhost' IDENTIFIED WITH mysql_native_password BY'PassWord.1';
+```
+
+Exit the MySQL 
+
+```powershell
+mysql > exit 
+```
+
+Start the interactive script by running:
+```powershell
+$ sudo mysql_secure_installation
+```
+There are three levels of password validation policy:
+
+LOW    Length >= 8
+MEDIUM Length >= 8, numeric, mixed case, and special characters
+STRONG Length >= 8, numeric, mixed case, special characters and dictionary file
+
+Please enter 0 = LOW, 1 = MEDIUM and 2 = STRONG: 1
+
+When you’re finished, test if you’re able to log in to the MySQL console by typing:
+
+```powershell
+$ sudo mysql -p
+```
+Notice the -p flag in this command, which will prompt you for the password used after changing the root user password.
+
+To exit the MySQL console, type:
+
+```powershell
+mysql> exit
+```
+
+The MySQL server has been successfully installed and secured. Next, we’ll proceed with installing PHP, the final component of the LAMP stack.
+
+## INSTALLATION PHP ##
+### OVERVIEW ###
+PHP (Hypertext Preprocessor) is a popular server-side scripting language used to build dynamic and interactive web applications. When combined with Apache and MySQL, it forms the LAMP (Linux, Apache, MySQL/MariaDB, PHP) stack, powering many websites and CMS platforms like WordPress, Drupal, and Joomla.
+
+To install these 3 packages at once, run:
+
+```powershell
+$ sudo apt install php libapache2-mod-php php-mysql
+```
+Once the installation is finished, you can run the following command to confirm your PHP version:
+
+```powershell
+php -v
+
+PHP 8.3.6 (cli) (built: Apr 15 2024 19:21:47) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.3.6, Copyright (c) Zend Technologies
+with Zend OPcache v8.3.6, Copyright (c), by Zend Technologies
+```
+
+Your LAMP stack is now fully installed and ready to use
+
+To verify your setup using a PHP script, it’s recommended to configure an Apache Virtual Host. This will provide a dedicated location for your website’s files and directories, and also enable you to host multiple websites on the same server seamlessly, without visitors noticing.
+
+### CREATING A VIRTUAL HOST FOR YOUR WEBSITE USING APACHE ###
+
+Create the directory for projectlamp using 'mkdir' command as follows:
+
+```powershell
+$ sudo mkdir /var/www/projectlamp
+```
+Assign ownership of the directory with the $USER environment variable, which will reference your current system user:
+
+```powershell
+$ sudo chown -R $USER:$USER /var/www/projectlamp
+```
+Create and open a new configuration file in Apache’s sites-available directory using your preferred command-line editor. Here, we’ll be using nano :
+
+```powershell
+$ sudo nano /etc/apache2/sites-available/projectlamp.conf
+```
+
+This will create a new blank file. Paste in the following bare-bones configuration by hitting on i on the keyboard to enter the insert mode, and paste the text:
+
+```powershell
+<VirtualHost *:80>
+    ServerName projectlamp
+    ServerAlias www.projectlamp 
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/projectlamp
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+You can use the ls command to show the new file in the sites-available directory
+
+```powershell
+$ sudo ls /etc/apache2/sites-available
+```
+You will see something like this
+```powershell
+000-default.conf  default-ssl.conf  projectlamp.conf
+```
+
+With this VirtualHost configuration, we’re telling Apache to serve projectlamp using /var/www/projectlampl as its web root directory. 
+
+You can now use a2ensite command to enable the new virtual host:
+
+```powershell
+$ sudo a2ensite projectlamp
+```
+You might want to disable the default website that comes installed with Apache.
+
+```powershell
+$ sudo a2dissite 000-default
+```
+To make sure your configuration file doesn’t contain syntax errors, run:
+
+```powershell
+$ sudo apache2ctl configtest
+```
+Finally, reload Apache so these changes take effect:
+
+```powershell
+$ sudo systemctl reload apache2
+```
+
+Your new website is now active, but the web root /var/www/projectlamp is still empty. Create an index.html file in that location so that we can test that the virtual host works as expected:
+
+```powershell
+sudo echo 'Hello LAMP from hostname' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectlamp/index.html
+
+```
+
+Now go to your browser and try to open your website URL using IP address:
+
+```powershell
+http://<Public-IP-Address>:80
+```
+
+
