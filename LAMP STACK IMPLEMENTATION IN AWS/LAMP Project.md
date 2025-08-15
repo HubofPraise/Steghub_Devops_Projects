@@ -228,7 +228,7 @@ Start the interactive script by running:
 ```powershell
 $ sudo mysql_secure_installation
 ```
-![Image](./Images/secure.jpeg)
+![Image](./Images/secure.jpg)
 
 There are three levels of password validation policy:
 
@@ -276,7 +276,7 @@ Zend Engine v4.3.6, Copyright (c) Zend Technologies
 with Zend OPcache v8.3.6, Copyright (c), by Zend Technologies
 ```
 <p float="center">
-  <img src="./Images/phpversion.PNG)" width="400" />
+  <img src="./Images/phpversion.PNG" width="400" />
   <img src="./Images/webphpdisplay.PNG" width="400" />
 </p>
 
@@ -327,6 +327,7 @@ You will see something like this
 
 ```
 ![Image](./Images/showphp.PNG)
+
 With this VirtualHost configuration, we’re telling Apache to serve projectlamp using /var/www/projectlampl as its web root directory. 
 
 You can now use a2ensite command to enable the new virtual host:
@@ -345,6 +346,7 @@ To make sure your configuration file doesn’t contain syntax errors, run:
 $ sudo apache2ctl configtest
 ```
 ![Image](./Images/check-config-syntac.png)
+
 Finally, reload Apache so these changes take effect:
 
 ```powershell
