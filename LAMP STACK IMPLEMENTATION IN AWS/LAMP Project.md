@@ -120,7 +120,6 @@ If creating new:
 </p>
 
 
-
 6. Storage Configuration
 - Keep the default 8 GB (you can increase it if needed)
 
@@ -128,17 +127,24 @@ If creating new:
 
 7. Review and Launch
 - Double-check all configurations
+- Click Launch Instance
+- Wait a few seconds → you’ll see “Your instances are now launching”
+<p float="center">
+  <img src="./Images/launch_instance.PNG" width="400" />
+  <img src="./Images/success.PNG" width="400" />
+</p>
 
-![Image](./Images/aws_login.PNG)
-
-Click Launch Instance
-
-> Wait a few seconds → you’ll see “Your instances are now launching”
 
 8. Access Your EC2 Instance
 - Go to the Instances section
 - Select your instance → click Connect
 - Choose the SSH tab → follow the instructions provided using your downloaded .pem key
+
+<p float="center">
+  <img src="./Images/ec2instanceconnect.PNG" width="400" />
+  <img src="./Images/ubuntu_cli.PNG" width="400" />
+</p>
+
 
 ## INSTALLING APACHE AND UPDATING FIREWALL ##
 ### OVERVIEW ###
@@ -163,6 +169,7 @@ $ sudo apt update
 # run apache2 package installation
 $ sudo apt install apache2
 ```
+![Image](./Images/apache2.PNG)
 
 To verify that apache2 is running as a Service in OS
 
@@ -172,6 +179,8 @@ $ sudo systemctl stop apache2
 $ sudo systemctl start apache2
 $ sudo systemctl status apache2
 ```
+![Image](./Images/apache_status.PNG)
+
 If it is green and running, then you did everything correctly - you have just launched your first Web Server in the Clouds!
 Before we can receive any traffic by our Web Server, we need to open TCP port 80 which is the default port that web browsers use to access web pages on the Internet
 As we know, we have TCP port 22 open by default on our EC2 machine to access it via SSH, so we need to add a rule to EC2 configuration to open inbound connection through port 80:
@@ -184,6 +193,8 @@ Test Apache in a Browser
 http://<Public-IP-Address>:80)
 ```
 You should see the Apache default test page.
+
+![Image](./Images/apachewebpage.PNG)
 
 ## INSTALLING MYSQL ##
 ### OVERVIEW ###
@@ -199,6 +210,8 @@ When the installation is finished, log in to the MySQL console by typing:
 ```powershell
 $ sudo mysql
 ```
+![Image](./Images/securemysql.PNG)
+
 It’s recommended that you run a security script that comes pre-installed with MySQL. This script will remove some insecure default settings and lock down access to your database system. Before running the script you will set a password for the root user, using mysql_native_password as default authentication method. We’re defining this user’s password as PassWord.1.
 
 ```powershell
@@ -215,6 +228,8 @@ Start the interactive script by running:
 ```powershell
 $ sudo mysql_secure_installation
 ```
+![Image](./Images/secure.jpeg)
+
 There are three levels of password validation policy:
 
 LOW    Length >= 8
@@ -229,6 +244,7 @@ When you’re finished, test if you’re able to log in to the MySQL console by 
 $ sudo mysql -p
 ```
 Notice the -p flag in this command, which will prompt you for the password used after changing the root user password.
+![Image](./Images//reloginmysql.PNG)
 
 To exit the MySQL console, type:
 
@@ -247,6 +263,8 @@ To install these 3 packages at once, run:
 ```powershell
 $ sudo apt install php libapache2-mod-php php-mysql
 ```
+![Image](./Images/php.PNG)
+LAMP STACK IMPLEMENTATION IN AWS/Images/php.PNG
 Once the installation is finished, you can run the following command to confirm your PHP version:
 
 ```powershell
@@ -257,6 +275,10 @@ Copyright (c) The PHP Group
 Zend Engine v4.3.6, Copyright (c) Zend Technologies
 with Zend OPcache v8.3.6, Copyright (c), by Zend Technologies
 ```
+<p float="center">
+  <img src="./Images/phpversion.PNG)" width="400" />
+  <img src="./Images/webphpdisplay.PNG" width="400" />
+</p>
 
 Your LAMP stack is now fully installed and ready to use
 
@@ -279,6 +301,7 @@ Create and open a new configuration file in Apache’s sites-available directory
 ```powershell
 $ sudo nano /etc/apache2/sites-available/projectlamp.conf
 ```
+![Image](./Images/phpdir.PNG)
 
 This will create a new blank file. Paste in the following bare-bones configuration by hitting on i on the keyboard to enter the insert mode, and paste the text:
 
@@ -301,8 +324,9 @@ $ sudo ls /etc/apache2/sites-available
 You will see something like this
 ```powershell
 000-default.conf  default-ssl.conf  projectlamp.conf
-```
 
+```
+![Image](./Images/showphp.PNG)
 With this VirtualHost configuration, we’re telling Apache to serve projectlamp using /var/www/projectlampl as its web root directory. 
 
 You can now use a2ensite command to enable the new virtual host:
@@ -320,6 +344,7 @@ To make sure your configuration file doesn’t contain syntax errors, run:
 ```powershell
 $ sudo apache2ctl configtest
 ```
+![Image](./Images/check-config-syntac.png)
 Finally, reload Apache so these changes take effect:
 
 ```powershell
@@ -338,5 +363,10 @@ Now go to your browser and try to open your website URL using IP address:
 ```powershell
 http://<Public-IP-Address>:80
 ```
+![Image](./Images/site-url-ip.png)
+
+### Conclusion ###
+
+By following these steps, you have successfully deployed a complete LAMP stack on your AWS EC2 instance. Starting from launching the instance, installing and configuring Apache, MySQL, and PHP, to setting up a Virtual Host, your server is now ready to host and serve dynamic web applications. With this foundation in place, you can now upload your own projects, configure domains, and further secure and optimize your environment for production use. This setup not only provides flexibility and scalability but also forms a reliable base for learning, development, and real-world deployment.
 
 
