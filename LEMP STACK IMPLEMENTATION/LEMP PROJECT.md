@@ -52,13 +52,15 @@ or
 curl http://127.0.0.1:80
 ```
 On a web browser
-```bash
+
+```web
 http://<Public-Ip-address>:80
 ```
 
 ### INSTALLING MYSQL ###
 Use 'apt' to acquire and install this software:
-```sql
+
+```bash
 sudo apt install mysql-server
 ```
 
@@ -66,27 +68,29 @@ When prompted, confirm installation by typing 'Y' and then ENTER
 
 When the installation is finished, log in to the MySQL console by typing:
 
-``` sql
+``` bash
 sudo mysql
 ```
 Set a password for the root user:
+
 ``` sql
 ALTERUSER'root'@'localhost' IDENTIFIED WITH mysql_native_password BY'PassWord.1';
 ```
 Exit the MySQL shell:
+
 ``` sql
 mysql > exit
 ```
 
 Validate password plugin:
 
-``` ubuntu
+``` bash
 sudo mysql_secure_installation
 ```
 
 Testing if able to log in:
 
-``` ubuntu
+``` bash
 sudo mysql -p
 ```
 -P flag - prompt for password used after change in the root user password 
@@ -95,7 +99,7 @@ sudo mysql -p
 
 To install these 2 packages at once,
 
-``` ubuntu
+``` bash
 sudo apt install php-fpm php-mysql
 ```
 
@@ -105,24 +109,24 @@ When prompted, type Y and press Enter to confirm installation
 
 Create the root web directory for your_doamin as follows:
 
-``` ubuntu
+``` bash
 sudo mkdir /var/www/projectLAMP
 ```
 Assign ownership of the directory
 
-``` ubuntu
+``` bash
 $ sudo chown -R $USER:$USER /var/www/projectLEMP
 ```
 
 Create a new configuration file in Nginx's
 
-``` ubuntu
+``` bash
 $ sudo nano /etc/nginx/sites-available/projectLEMP
 ```
 
 Create a new blank file 
 
-``` ubuntu
+``` nano
 server {
     listen 80;
     server_name projectLEMP www.projectLEMP;
