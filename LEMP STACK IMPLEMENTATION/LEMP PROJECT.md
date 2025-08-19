@@ -14,8 +14,18 @@ In this implementation, we deploy a LEMP stack on an AWS EC2 instance (Ubuntu Se
       - Allow HTTPS (443) if needed.
  - Launch instance and connect via SSH:
 
+<p float="left">
+  <img src="./IMAGES/instancelaunch.PNG" width="300" />
+  <img src="./IMAGES/lempkey.PNG" width="300" />
+  <img src="./IMAGES/keypairandnetwork.PNG" width="300" />
+  <img src="./IMAGES/configurestorage.PNG" width="300" />
+  <img src="./IMAGES/successinstancelaunch.PNG" width="300" />
+  <img src="./IMAGES/sshclient.PNG" width="300" />
+</p>
 
 We will be using Git Bash to launch the EC2 instance 
+
+![image](./IMAGES/installation_gitbash.PNG)
 
 Here is the video on how to install [Gitbash](https://youtu.be/qdwWe9COT9k?si=3UIu-LD7gGLj2qiw).
 
@@ -25,8 +35,10 @@ $ cd downloads
 
 ```bash
 choown 400 lempkey.pem
-ssh -i <Your-private-key.pem> ubuntu@<EC2-Public-IP-address>
+ssh -i lempkey.pem ubuntu@13.48.28.179
 ```
+
+![image](./IMAGES/welcomeubuntu.PNG)
 
 ### INSTALLING THE NGINX WEB SERVER ###
 
@@ -44,6 +56,8 @@ To verify that nginx was successfully installed and is running as a service in U
 ```bash
 sudo systemctl status nginx
 ```
+![image](./IMAGES/statusofnginx.PNG)
+
 Our server is running, and we can access it locally and from the internet 
 
 ```bash
@@ -51,11 +65,15 @@ curl http://localhost:80
 or
 curl http://127.0.0.1:80
 ```
+![image](./IMAGES/webonshell.PNG)
+
 On a web browser
 
 ```web
 http://<Public-Ip-address>:80
 ```
+![image](./IMAGES/nginxonweb.PNG)
+
 
 ### INSTALLING MYSQL ###
 Use 'apt' to acquire and install this software:
@@ -66,7 +84,10 @@ sudo apt install mysql-server
 
 When prompted, confirm installation by typing 'Y' and then ENTER
 
+![image](./IMAGES/mysqlinstall.PNG)
+
 When the installation is finished, log in to the MySQL console by typing:
+
 
 ``` bash
 sudo mysql
@@ -76,6 +97,8 @@ Set a password for the root user:
 ``` sql
 ALTERUSER'root'@'localhost' IDENTIFIED WITH mysql_native_password BY'PassWord.1';
 ```
+![image](./IMAGES/mysqlroot.PNG)
+
 Exit the MySQL shell:
 
 ``` sql
@@ -87,13 +110,16 @@ Validate password plugin:
 ``` bash
 sudo mysql_secure_installation
 ```
+![image](./IMAGES/securerootpassword.PNG)
 
 Testing if able to log in:
 
 ``` bash
 sudo mysql -p
 ```
--P flag - prompt for password used after change in the root user password 
+-P flag - prompt for password used after a change in the root user password 
+
+![image](./IMAGES/mysqlsecureinstall.PNG)
 
 ### INSTALLING PHP ###
 
@@ -102,6 +128,7 @@ To install these 2 packages at once,
 ``` bash
 sudo apt install php-fpm php-mysql
 ```
+LEMP STACK IMPLEMENTATION/IMAGES/phpinstall.PNG
 
 When prompted, type Y and press Enter to confirm installation
 
@@ -112,6 +139,7 @@ Create the root web directory for your_doamin as follows:
 ``` bash
 sudo mkdir /var/www/projectLAMP
 ```
+
 Assign ownership of the directory
 
 ``` bash
@@ -123,6 +151,8 @@ Create a new configuration file in Nginx's
 ``` bash
 $ sudo nano /etc/nginx/sites-available/projectLEMP
 ```
+![image](./IMAGES/phpprocessor.PNG)
+
 
 Create a new blank file 
 
@@ -149,6 +179,7 @@ server {
 }
 ```
 
+
 Here’s what each of these directives and location blocks do:
 
  - listen — Defines what port Nginx will listen on. In this case, it will listen on port 80, the default port for HTTP.
@@ -165,6 +196,8 @@ Here’s what each of these directives and location blocks do:
 
  - location ~ /\.ht — The last location block deals with .htaccess files, which Nginx does not process. By adding the deny all directive, if any .htaccess files happen to find their way into the document root ,they will not be served to visitors.
 
+![image](./IMAGES/bare-bone.PNG)
+
 Enable the configuration
 
 ``` ubuntu
@@ -177,6 +210,7 @@ Testing the configuration for syntax errors
 ``` ubuntu
 $ sudo nginx -t
 ```
+![image](./IMAGES/nginxsuccess.PNG)
 
 Disable default Nginx host that is currently configured listen on port 80
 
@@ -184,17 +218,22 @@ Disable default Nginx host that is currently configured listen on port 80
 $ sudo unlink /etc/nginx.sites-enabled/default
 $ sudo systemctl reload nginx # Reload the nginx 
 ```
+![image](./IMAGES/phpdefault.PNG)
+
 Our website is now active! We then create an index.html file in the location so that we can test that our new server block works as expected:
 
 ``` ubuntu
 sudo echo 'Hello LEMP from hostname' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html
 ```
+![image](./IMAGES/phponshell.PNG)
 
 Web browser 
 
 ``` ubuntu
-(http://<Public-IP-Address>:80)
+(http://13.48.28.179:80)
 ```
+![image](./IMAGES/webecho.PNG)
+
 If you see the text from the 'echo' command you wrote to index.html file, then it means your Nginx site is working as expected. 
 
 ### TESTING PHP WITH NGINX ###
@@ -211,12 +250,14 @@ phpinfo();
 Access your browser 
 
 ``` ubuntu
-http://<public-address>/info.php
+http://13.48.3.99/info.php
 ``` 
-It’s best to remove the file you created as it contains sensitive information about your PHP environment and your Ubuntu server. You can use rm to remove that file:
+![image](./IMAGES/phpweb.PNG)
+
+It’s best to remove the file you created, as it contains sensitive information about your PHP environment and your Ubuntu server. You can use rm to remove that file:
 
 ``` ubuntu
-$ sudo rm /var/www/your_domain/info.php
+$ sudo rm /var/www/projectLEMP/info.php
 ``` 
 
 ### RETRIEVING DATA FROM MYSQL DATABASE WITH PHP ###
@@ -242,11 +283,13 @@ mysql>  CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 
 ``` ubuntu
 mysql> GRANT ALL ON example_database.* TO 'example_user'@'%';
 ``` 
+![image](./IMAGES/sqldatabase.PNG)
 
 Confirm that you have access to the example_database database
 ``` ubuntu
 mysql> SHOW DATABASES;
 ``` 
+![image](./IMAGES/sqldemodatabase.PNG)
 
 Create a test table named todo-list
 
@@ -271,6 +314,8 @@ Confirm that the data was successfully saved
 mysql>  SELECT * FROM example_database.todo_list;
 ```
 
+![image](./IMAGES/mysqldatabase.PNG)
+
 Exit from the MySQL console
 
 Now you can create a PHP script that will connect to MySQL and query for your content.
@@ -278,6 +323,8 @@ Now you can create a PHP script that will connect to MySQL and query for your co
 ``` ubuntu
 $ nano /var/www/projectLEMP/todo_list.php
 ```
+![image](./IMAGES/infophp.PNG)
+
 Copy this script into the todo_list.php
 
 ``` nano
@@ -304,7 +351,8 @@ Save and close
 You can now access this page in your web browser by visiting the public IP address configured for your website, followed by /todo_list.php
 
 ``` web
-http://<Public__IP>/todo_list.php
+http://13.48.3.99/todo_list.php
 ```
+![image](./IMAGES/phpfinal.PNG)
 
 This means php environment is ready to connect and interact with the MySQL server.
